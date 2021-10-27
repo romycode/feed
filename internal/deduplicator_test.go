@@ -23,9 +23,9 @@ func TestDeduplicator_Process(t *testing.T) {
 			},
 			wantErr: false,
 			want: Report{
-				invalidCount:    0,
-				validCount:      5,
-				duplicatedCount: 0,
+				InvalidCount:    0,
+				ValidCount:      5,
+				DuplicatedCount: 0,
 			},
 		},
 		{
@@ -41,9 +41,9 @@ func TestDeduplicator_Process(t *testing.T) {
 			},
 			wantErr: false,
 			want: Report{
-				invalidCount:    0,
-				validCount:      2,
-				duplicatedCount: 5,
+				InvalidCount:    0,
+				ValidCount:      2,
+				DuplicatedCount: 5,
 			},
 		},
 		{
@@ -53,9 +53,9 @@ func TestDeduplicator_Process(t *testing.T) {
 			},
 			wantErr: true,
 			want: Report{
-				invalidCount:    1,
-				validCount:      0,
-				duplicatedCount: 0,
+				InvalidCount:    1,
+				ValidCount:      0,
+				DuplicatedCount: 0,
 			},
 		},
 		{
@@ -65,9 +65,9 @@ func TestDeduplicator_Process(t *testing.T) {
 			},
 			wantErr: true,
 			want: Report{
-				invalidCount:    1,
-				validCount:      0,
-				duplicatedCount: 0,
+				InvalidCount:    1,
+				ValidCount:      0,
+				DuplicatedCount: 0,
 			},
 		},
 		{
@@ -77,9 +77,9 @@ func TestDeduplicator_Process(t *testing.T) {
 			},
 			wantErr: true,
 			want: Report{
-				invalidCount:    1,
-				validCount:      0,
-				duplicatedCount: 0,
+				InvalidCount:    1,
+				ValidCount:      0,
+				DuplicatedCount: 0,
 			},
 		},
 	}
