@@ -5,9 +5,9 @@ import (
 )
 
 type Report struct {
-	invalidCount    int
-	validCount      int
-	duplicatedCount int
+	InvalidCount    int
+	ValidCount      int
+	DuplicatedCount int
 }
 
 type Deduplicator struct {
@@ -43,9 +43,9 @@ func (d *Deduplicator) Process(data string) error {
 
 func (d Deduplicator) Report() Report {
 	return Report{
-		invalidCount:    d.invalidCount,
-		validCount:      d.validCount,
-		duplicatedCount: d.duplicatedCount,
+		InvalidCount:    d.invalidCount,
+		ValidCount:      d.validCount,
+		DuplicatedCount: d.duplicatedCount,
 	}
 }
 
