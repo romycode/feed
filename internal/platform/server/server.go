@@ -11,10 +11,12 @@ import (
 type TCPServer struct {
 	addr    string
 	maxConn int
+
+	output chan string
 }
 
-func NewTCPServer(addr string, maxConn int) *TCPServer {
-	return &TCPServer{addr: addr, maxConn: maxConn}
+func NewTCPServer(addr string, maxConn int, output chan string) *TCPServer {
+	return &TCPServer{addr: addr, maxConn: maxConn, output: output}
 }
 
 func (s *TCPServer) Start(ctx context.Context) error {
@@ -24,7 +26,7 @@ func (s *TCPServer) Start(ctx context.Context) error {
 	}
 
 	for i := 0; i < s.maxConn; i++ {
-		go handle(ctx, ln)
+		go handle(ctx, ln, s.output)
 	}
 
 	select {
@@ -33,7 +35,7 @@ func (s *TCPServer) Start(ctx context.Context) error {
 	}
 }
 
-func handle(ctx context.Context, ln net.Listener) {
+func handle(ctx context.Context, ln net.Listener, output chan string) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -48,9 +50,8 @@ func handle(ctx context.Context, ln net.Listener) {
 			if err != nil {
 				log.Println("error reading request on port 4000: " + err.Error())
 			}
-			rawSKU := string(data)
 
-			fmt.Println("SKU: " + rawSKU)
+			output <- string(data)
 
 			_ = conn.Close()
 		}
