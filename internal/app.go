@@ -36,6 +36,7 @@ func (a *App) Start() error {
 		return fmt.Errorf("error starting tcp server: %w", err)
 	}
 
+	a.Close()
 	return nil
 }
 
@@ -48,6 +49,11 @@ func (a App) handleOutput(cancel context.CancelFunc) {
 
 		fmt.Println(msg)
 	}
+}
+
+func (a App) Close() {
+	close(a.sigint)
+	close(a.msgs)
 }
 
 // listenOsInterruptSignal will cancel the context for CTRL+C
