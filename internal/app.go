@@ -17,10 +17,11 @@ type App struct {
 	sigint       chan os.Signal    // sigint chan for os interrupt event
 	msgs         chan string       // msgs chan for messages to process
 	deduplicator *Deduplicator     // deduplicator service to process received messages
+	skuStorage   SKUStore          // skuStorage service to store skus
 }
 
-func NewApp(addr string, maxConn int, ttl time.Duration, deduplicator *Deduplicator) *App {
-	app := &App{ttl: ttl, sigint: make(chan os.Signal, 1), msgs: make(chan string, 10), deduplicator: deduplicator}
+func NewApp(addr string, maxConn int, ttl time.Duration, deduplicator *Deduplicator, store SKUStore) *App {
+	app := &App{ttl: ttl, sigint: make(chan os.Signal, 1), msgs: make(chan string, 10), deduplicator: deduplicator, skuStorage: store}
 	app.svr = server.NewTCPServer(addr, maxConn, app.msgs)
 
 	return app
@@ -38,6 +39,12 @@ func (a *App) Start() error {
 	}
 
 	a.Close()
+
+	err := a.skuStorage.Save(a.deduplicator.values)
+	if err != nil {
+		return fmt.Errorf("error saving skus: %w", err)
+	}
+
 	return nil
 }
 
