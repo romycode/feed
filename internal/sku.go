@@ -9,6 +9,10 @@ import (
 
 var ErrInvalidSKU = errors.New("SKU length must be exactly 10 characters, 4 letters, 1 dash, 4 numbers finished with line break")
 
+type SKUStore interface {
+	Save(skus []SKU) error
+}
+
 // SKU struct to work with SKUs
 type SKU struct {
 	value string
