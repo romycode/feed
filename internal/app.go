@@ -45,6 +45,14 @@ func (a *App) Start() error {
 		return fmt.Errorf("error saving skus: %w", err)
 	}
 
+	report := a.deduplicator.Report()
+	fmt.Printf(
+		"Received %d unique product skus, %d duplicates, %d discard values\n",
+		report.ValidCount,
+		report.DuplicatedCount,
+		report.InvalidCount,
+	)
+
 	return nil
 }
 
