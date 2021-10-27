@@ -1,10 +1,13 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"regexp"
 )
+
+var ErrInvalidSKU = errors.New("SKU length must be exactly 10 characters, 4 letters, 1 dash, 4 numbers finished with line break")
 
 // SKU struct to work with SKUs
 type SKU struct {
@@ -14,14 +17,14 @@ type SKU struct {
 // NewSKU generates a valid sku
 func NewSKU() SKU {
 	return SKU{
-		value: fmt.Sprintf("%s-%s%s%s%s", randomLetter()+randomLetter()+randomLetter()+randomLetter(), randomInt(), randomInt(), randomInt(), randomInt()),
+		value: fmt.Sprintf("%s-%s%s%s%s\n", randomLetter()+randomLetter()+randomLetter()+randomLetter(), randomInt(), randomInt(), randomInt(), randomInt()),
 	}
 }
 
 // NewSKUFromString validate and return the sku for the given string
 func NewSKUFromString(sku string) (SKU, error) {
 	if valid := validateSKU(sku); !valid {
-		return SKU{}, fmt.Errorf("%s is invalid sku", sku)
+		return SKU{}, ErrInvalidSKU
 	}
 	return SKU{
 		value: sku,
@@ -34,7 +37,7 @@ func (s SKU) Value() string {
 
 // validateSKU validate the string following the requirements defined in the guides
 func validateSKU(input string) bool {
-	re, _ := regexp.Compile(`^[a-zA-Z]{4}-[0-9]{4}$`)
+	re, _ := regexp.Compile(`^[a-zA-Z]{4}-[0-9]{4}\n$`)
 	valid := re.MatchString(input)
 
 	return valid

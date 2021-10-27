@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewSKU(t *testing.T) {
-	if got := NewSKU(); len(got.Value()) != 9 {
+	if got := NewSKU(); len(got.Value()) != 10 {
 		t.Errorf("NewSKU() = %v, is invalid SKU format", got)
 	}
 }
@@ -32,10 +32,10 @@ func TestNewSKUFromString(t *testing.T) {
 		{
 			name: "parse correct SKU",
 			args: args{
-				sku: "ABCD-1234",
+				sku: "ABCD-1234\n",
 			},
 			want: SKU{
-				value: "ABCD-1234",
+				value: "ABCD-1234\n",
 			},
 			wantErr: false,
 		},
