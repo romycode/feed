@@ -50,9 +50,10 @@ func (a *App) Start() error {
 
 func (a App) handleOutput(cancel context.CancelFunc) {
 	for msg := range a.msgs {
-		if "terminate" == msg {
+		if "terminate\n" == msg {
 			log.Println("client sent 'terminate' sequence gracefully shutdown started...")
 			cancel()
+			break
 		}
 
 		_ = a.deduplicator.Process(msg)
