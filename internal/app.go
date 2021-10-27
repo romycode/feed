@@ -12,14 +12,15 @@ import (
 )
 
 type App struct {
-	ttl    time.Duration     // ttl time to life up for the app
-	svr    *server.TCPServer // svr tcp listener for connections
-	sigint chan os.Signal    // sigint chan for os interrupt event
-	msgs   chan string       // msgs chan for messages to process
+	ttl          time.Duration     // ttl time to life up for the app
+	svr          *server.TCPServer // svr tcp listener for connections
+	sigint       chan os.Signal    // sigint chan for os interrupt event
+	msgs         chan string       // msgs chan for messages to process
+	deduplicator *Deduplicator     // deduplicator service to process received messages
 }
 
-func NewApp(addr string, maxConn int, ttl time.Duration) *App {
-	app := &App{ttl: ttl, sigint: make(chan os.Signal, 1), msgs: make(chan string, 10)}
+func NewApp(addr string, maxConn int, ttl time.Duration, deduplicator *Deduplicator) *App {
+	app := &App{ttl: ttl, sigint: make(chan os.Signal, 1), msgs: make(chan string, 10), deduplicator: deduplicator}
 	app.svr = server.NewTCPServer(addr, maxConn, app.msgs)
 
 	return app
@@ -47,7 +48,7 @@ func (a App) handleOutput(cancel context.CancelFunc) {
 			cancel()
 		}
 
-		fmt.Println(msg)
+		_ = a.deduplicator.Process(msg)
 	}
 }
 
